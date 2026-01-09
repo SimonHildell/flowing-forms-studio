@@ -23,7 +23,7 @@ const HeroScroll = () => {
       {/* Overlay content */}
       <div className="absolute inset-0 flex flex-col justify-end pb-16 md:pb-24">
         <div className="container">
-          <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.5s' }}>
+          <div className="animate-fade-in opacity-0 text-white" style={{ animationDelay: '0.5s' }}>
             <p className="text-caption mb-2">Computational Designer</p>
             <h1 className="text-display max-w-3xl">
               Architecture at the
