@@ -9,7 +9,7 @@ const Header = () => {
       <div className="container flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <a href="/" className="text-sm md:text-base font-normal tracking-tight">
-          Studio / Name
+          Simon Hildell
         </a>
 
         {/* Desktop navigation */}
@@ -17,6 +17,7 @@ const Header = () => {
           <a href="#work" className="text-sm hover:opacity-60 transition-opacity">Work</a>
           <a href="#about" className="text-sm hover:opacity-60 transition-opacity">About</a>
           <a href="#contact" className="text-sm hover:opacity-60 transition-opacity">Contact</a>
+          <a href="#contact" className="text-sm hover:opacity-60 transition-opacity">Portfolio</a>
         </nav>
 
         {/* Mobile menu button */}

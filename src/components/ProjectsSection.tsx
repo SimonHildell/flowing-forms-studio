@@ -2,76 +2,136 @@ import { useState } from "react";
 import ProjectCard from "./ProjectCard";
 import ProjectDetail from "./ProjectDetail";
 
-import project1 from "@/assets/project-1.jpg";
-import project2 from "@/assets/project-2.jpg";
+import project1 from "@/assets/Straighteningfront.gif";
+import project2 from "@/assets/growingfront.gif";
 import project3 from "@/assets/project-3.jpg";
 import project4 from "@/assets/project-4.jpg";
+import detail from "@/assets/detail.png";
+import render from "@/assets/naturumrender.jpg";
+import process from "@/assets/naturumprocess.jpg";
+import dia1 from "@/assets/diagram 1.jpg";
+import dia2 from "@/assets/diagram 2.jpg";
+import dia3 from "@/assets/diagram 3.jpg";
+import naturumVideo from "@/assets/Video compressed.mp4";
+import axo from "@/assets/Exploaxo.png";
+import a1 from "@/assets/as1.jpg";
+import a2 from "@/assets/as2.jpg";
+import a3 from "@/assets/as3.jpg";
+import v1 from "@/assets/V1.jpg";
+import v2 from "@/assets/V2.jpg";
+import v3 from "@/assets/V3.jpg";
+import v4 from "@/assets/V4.jpg";
+import v5 from "@/assets/V5.jpg";
+import v6 from "@/assets/V6.jpg";
+import str from "@/assets/Final.gif";
+import turn from "@/assets/fork.gif";
+import vec from "@/assets/VEC.jpg";
+import naxo from "@/assets/naturumaxo.jpg";
 
-const projects = [
+// ---------------- TYPE DEFINITIONS ----------------
+type Media = { type: "image" | "video"; src: string };
+
+type Project = {
+  id: number;
+  title: string;
+  category: string;
+  year: string;
+  image: string;
+  description: string;
+  details: string[];
+  media: Media[];
+};
+
+// ---------------- PROJECTS ARRAY ----------------
+const projects: Project[] = [
   {
     id: 1,
-    title: "Morphogenetic Pavilion",
-    category: "Installation",
-    year: "2024",
+    title: "Naturum",
+    category: "Academic Project",
+    year: "2025",
     image: project1,
-    description: "A parametric pavilion exploring the relationship between natural growth patterns and computational form-finding. The structure emerges from algorithms inspired by biological morphogenesis, creating a space that blurs the boundary between organic and artificial.",
+    description:
+      "A hyperlocal public building that responds to its surroundings and building industry by exploring unconventional construction methods and material use. By utilizing pieces that are normally discarded in the forest industry today, this project sits on the edge of experimental and feasible.",
     details: [
-      "Location: Berlin, Germany",
-      "Area: 450 m²",
-      "Materials: GFRP, Steel",
-      "Software: Grasshopper, Kangaroo"
+      "Location: Breanäs, Sweden",
+      "Area: 550 m²",
+      "Software: Rhinoceros, Grasshopper",
+      "Together with: Theo Edfast",
     ],
-    images: [project1, project2]
+    media: [
+      { type: "image", src: detail },
+      { type: "image", src: render },
+      { type: "image", src: process },
+      { type: "image", src: naxo },
+      { type: "image", src: str },
+      { type: "image", src: turn },
+    ],
   },
   {
     id: 2,
-    title: "Circular Museum",
-    category: "Cultural",
-    year: "2023",
+    title: "Nakagin capsule",
+    category: "Academic Project",
+    year: "2025",
     image: project2,
-    description: "A museum designed around the concept of continuous circulation. The building's curved walls guide visitors through an endless loop of exhibition spaces, with natural light filtered through a parametric skylight system.",
+    description:
+      "A project where the main goal for us was to learn the Rhino, Grasshopper, and Unreal Engine workflow. We went for the cyberpunky aesthetic and the narrative that some experiment went wrong. Watch the video and hit me up if you want to play in the file.",
     details: [
-      "Location: Oslo, Norway",
-      "Area: 12,000 m²",
-      "Materials: Concrete, Glass",
-      "Collaboration: Structure Studio"
+      "Software: Rhinoceros, Grasshopper, Unreal Engine",
+      "Together with: Finn Heinecke and Mikolaj Szczerski",
     ],
-    images: [project2, project3]
+    media: [
+      { type: "video", src: naturumVideo },
+      { type: "image", src: dia1 },
+      { type: "image", src: dia2 },
+      { type: "image", src: dia3 },
+    ],
   },
   {
     id: 3,
-    title: "Tessellated Facade",
-    category: "Commercial",
-    year: "2023",
+    title: "Rain hub",
+    category: "Bachelor project",
+    year: "2025",
     image: project3,
-    description: "A kinetic facade system that responds to solar conditions and occupant preferences. Each panel is algorithmically positioned to optimize daylighting while creating a dynamic visual identity for the building.",
+    description:
+      "A new way of thinking about a youth center by using rain as a resource rather than an obstacle. The design incorporates innovative water management systems and is designed with a roof that responds to how the rain falls on it. The building accommodates activities which normally disappear during rainy weather for teens.",
     details: [
-      "Location: Dubai, UAE",
-      "Area: 8,500 m²",
-      "Materials: Aluminum, ETFE",
-      "Awards: Facade Innovation Prize"
+      "Location: Mölndal, Sweden",
+      "Software: Rhinoceros, Grasshopper, Revit",
     ],
-    images: [project3, project4]
+    media: [
+      { type: "image", src: v6 },
+      { type: "image", src: v1 },
+      { type: "image", src: v2 },
+      { type: "image", src: v3 },
+      { type: "image", src: v4 },
+      { type: "image", src: v5 },
+      { type: "image", src: vec },
+    ],
   },
   {
     id: 4,
-    title: "Vertical Ecosystem",
-    category: "Mixed-Use",
-    year: "2022",
+    title: "Artist studios",
+    category: "Academic Project",
+    year: "2024",
     image: project4,
-    description: "A high-rise that integrates biophilic design principles with computational optimization. The twisted form maximizes views while creating sky gardens that spiral up the building's height.",
+    description:
+      "A project blending public and private spaces for digital artists in Berlin. Through the building, an organic structure runs all the way from bottom to top reminding bypassers of the public garden on top.",
     details: [
-      "Location: Singapore",
-      "Height: 280 m",
-      "Materials: Steel, Glass, Greenery",
-      "Status: Under Construction"
+      "Location: Neukölln, Berlin",
+      "Software: Rhinoceros, Grasshopper, Revit",
     ],
-    images: [project4, project1]
-  }
+    media: [
+      { type: "image", src: axo },
+      { type: "image", src: a1 },
+      { type: "image", src: a2 },
+      { type: "image", src: a3 },
+    ],
+  },
 ];
 
+// ---------------- COMPONENT ----------------
 const ProjectsSection = () => {
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
     <>

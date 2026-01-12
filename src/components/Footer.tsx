@@ -1,3 +1,6 @@
+import compPortfolio from "@/assets/ComputationalDesignPortfolio.pdf";
+import archPortfolio from "@/assets/ArchitecturalDesignPortfolio.pdf";
+
 const Footer = () => {
   return (
     <footer id="contact" className="border-t border-border">
@@ -10,7 +13,7 @@ const Footer = () => {
               href="mailto:hello@studio.com"
               className="text-display hover:opacity-60 transition-opacity"
             >
-              hello@studio.com
+              simon@hildell.com
             </a>
           </div>
 
@@ -19,17 +22,21 @@ const Footer = () => {
             <div>
               <p className="text-caption mb-4">Social</p>
               <div className="flex flex-col gap-2">
-                <a href="#" className="text-body hover:opacity-60 transition-opacity">Instagram</a>
-                <a href="#" className="text-body hover:opacity-60 transition-opacity">LinkedIn</a>
-                <a href="#" className="text-body hover:opacity-60 transition-opacity">Behance</a>
+                <a href="https://www.instagram.com/simonhildellworks/" target="_blank" rel="noopener noreferrer" className="text-body hover:opacity-60 transition-opacity">Instagram</a>
+                <a href="https://www.linkedin.com/in/simon-hildell-19b078107" target="_blank" rel="noopener noreferrer" className="text-body hover:opacity-60 transition-opacity">LinkedIn</a>
+              </div>
+            </div>
+            <div>
+              <p className="text-caption mb-4">Portfolios</p>
+              <div className="flex flex-col gap-2">
+                <a href={compPortfolio} target="_blank" rel="noopener noreferrer" className="text-body hover:opacity-60 transition-opacity">Computational design portfolio</a>
+                <a href={archPortfolio} target="_blank" rel="noopener noreferrer" className="text-body hover:opacity-60 transition-opacity">Architectural design portfolio</a>
               </div>
             </div>
             <div>
               <p className="text-caption mb-4">Location</p>
               <p className="text-body text-muted-foreground">
-                New York, NY
-                <br />
-                United States
+                Lund, Sweden
               </p>
             </div>
           </div>
@@ -37,8 +44,8 @@ const Footer = () => {
 
         {/* Bottom */}
         <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between gap-4">
-          <p className="text-caption">© 2025 Studio Name. All rights reserved.</p>
-          <p className="text-caption">Architectural & Computational Design</p>
+          <p className="text-caption">© 2026 Simon Hildell</p>
+          <p className="text-caption">Architectural & Computational Design student</p>
         </div>
       </div>
     </footer>

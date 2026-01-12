@@ -6,20 +6,22 @@ const AboutSection = () => {
           {/* Left column */}
           <div className="md:col-span-5">
             <p className="text-caption mb-2">About</p>
-            <h2 className="text-headline">Studio Philosophy</h2>
+            <h2 className="text-headline">Who I am</h2>
           </div>
 
           {/* Right column */}
           <div className="md:col-span-7">
             <p className="text-body text-lg leading-relaxed mb-8">
-              We operate at the intersection of architecture, computation, and material innovation.
-              Our practice embraces algorithmic thinking not as an end in itself, but as a means
-              to discover forms and systems that would otherwise remain hidden.
+              I am an architecture student currently pursuing a Master of Science in 
+              Digital Architecture and Emergent Futures at Lund University. 
             </p>
             <p className="text-body text-lg leading-relaxed mb-12 text-muted-foreground">
-              Every project begins with a question—about space, about structure, about the
-              relationship between the built environment and its inhabitants. Through iterative
-              computational exploration, we seek answers that are both unexpected and inevitable.
+              I have a huge passion for creative problem solving through computational design and 
+              the use of mathematics to inform form, structure, and spatial logic. My work explores 
+              the intersection of technology, materiality and human experience, 
+              aiming to create spaces that are both functional and emotionally engaging. I enjoy 
+              experimenting with parametric tools, digital fabrication, and interactive environments 
+              to push the boundaries of what we can achieve through architecture.
             </p>
 
             {/* Services */}
@@ -33,19 +35,19 @@ const AboutSection = () => {
               <div className="border-t border-border pt-6">
                 <h3 className="text-sm font-medium mb-2">Architecture</h3>
                 <p className="text-body text-muted-foreground">
-                  Concept to construction, all scales and typologies
+                  Concept to construction, all scales, typologies and phases
                 </p>
               </div>
               <div className="border-t border-border pt-6">
-                <h3 className="text-sm font-medium mb-2">Facade Engineering</h3>
+                <h3 className="text-sm font-medium mb-2">Parametric Tools</h3>
                 <p className="text-body text-muted-foreground">
-                  Complex geometries, performance optimization
+                  Scripting and rule-based approaches
                 </p>
               </div>
               <div className="border-t border-border pt-6">
-                <h3 className="text-sm font-medium mb-2">Digital Fabrication</h3>
+                <h3 className="text-sm font-medium mb-2">Creative Problem Solving</h3>
                 <p className="text-body text-muted-foreground">
-                  CNC, 3D printing, robotic manufacturing
+                  Algorithmic thinking and inventive solutions
                 </p>
               </div>
             </div>

@@ -1,5 +1,8 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
+import naturumReport from "@/assets/Report.pdf";
+
+
 
 interface ProjectDetailProps {
   project: {
@@ -10,7 +13,10 @@ interface ProjectDetailProps {
     image: string;
     description: string;
     details: string[];
-    images: string[];
+    media: {
+      type: "image" | "video";
+      src: string;
+    }[];
   };
   onClose: () => void;
 }
@@ -56,30 +62,55 @@ const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
               <h1 className="text-display mb-8">{project.title}</h1>
               
               <div className="space-y-4">
-                {project.details.map((detail, index) => (
-                  <div key={index} className="border-t border-border pt-4">
-                    <p className="text-body text-muted-foreground">{detail}</p>
-                  </div>
-                ))}
-              </div>
+  {project.details.map((detail, index) => (
+    <div key={index} className="border-t border-border pt-4">
+      <p className="text-body text-muted-foreground">{detail}</p>
+
+{project.id === 1 && detail.startsWith("Together with") && (
+        <a
+          href={naturumReport}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-block text-body underline underline-offset-4 hover:opacity-60 transition-opacity"
+        >
+          Read report here
+        </a>
+      )}
+    </div>
+  ))}
+</div>
             </div>
 
             {/* Right column - Description */}
             <div className="md:col-span-7">
               <p className="text-body text-lg leading-relaxed mb-12">{project.description}</p>
               
-              {/* Additional images */}
-              <div className="space-y-8">
-                {project.images.map((img, index) => (
-                  <div key={index} className="overflow-hidden">
-                    <img
-                      src={img}
-                      alt={`${project.title} - Image ${index + 1}`}
-                      className="w-full h-auto object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
+              {/* Additional media */}
+<div className="space-y-8">
+  {project.media.map((item, index) => (
+    <div key={index} className="overflow-hidden">
+      {item.type === "video" ? (
+        <video
+  src={item.src}
+  autoPlay
+  loop
+  muted
+  playsInline
+  controls
+  className="w-full h-auto object-cover"
+>
+</video>
+      ) : (
+        <img
+          src={item.src}
+          alt={`${project.title} - Media ${index + 1}`}
+          className="w-full h-auto object-cover"
+        />
+      )}
+    </div>
+  ))}
+</div>
+
             </div>
           </div>
         </div>
