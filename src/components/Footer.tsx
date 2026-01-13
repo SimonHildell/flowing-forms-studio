@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="md:col-span-6">
             <h2 className="text-headline mb-6">Let's collaborate</h2>
             <a
-              href="mailto:hello@studio.com"
+              href="mailto:simon@hildell.com"
               className="text-display hover:opacity-60 transition-opacity"
             >
               simon@hildell.com

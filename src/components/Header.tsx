@@ -8,7 +8,7 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-sm">
       <div className="container flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
-        <a href="/" className="text-sm md:text-base font-normal tracking-tight">
+        <a href="/flowing-forms-studio/" className="text-sm md:text-base font-normal tracking-tight">
           Simon Hildell
         </a>
 
