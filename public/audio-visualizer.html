@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Audio Visualizer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: rgb(6,4,14); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: sans-serif; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  #ui {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(255,255,255,0.07); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px; padding: 10px 24px;
+  }
+  #startBtn {
+    background: none; border: 1px solid rgba(255,255,255,0.4); color: #fff;
+    padding: 8px 20px; border-radius: 999px; font-size: 14px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  #startBtn:hover { background: rgba(255,255,255,0.1); }
+  #startBtn:disabled { opacity: 0.5; cursor: default; }
+  #status { font-size: 13px; color: rgba(255,255,255,0.5); }
+  #bands { display: flex; gap: 3px; align-items: flex-end; }
+  .bb { width: 18px; height: 32px; border-radius: 2px; background: rgba(255,255,255,0.08); display: flex; align-items: flex-end; overflow: hidden; }
+  .bf { width: 100%; background: #fff; border-radius: 2px; transition: height 0.06s; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <button id="startBtn">&#127908; Enable mic</button>
+  <span id="status">Click to start</span>
+  <div id="bands">
+    <div class="bb"><div class="bf" id="bf0" style="height:0%"></div></div>
+    <div class="bb"><div class="bf" id="bf1" style="height:0%"></div></div>
+    <div class="bb"><div class="bf" id="bf2" style="height:0%"></div></div>
+    <div class="bb"><div class="bf" id="bf3" style="height:0%"></div></div>
+    <div class="bb"><div class="bf" id="bf4" style="height:0%"></div></div>
+    <div class="bb"><div class="bf" id="bf5" style="height:0%"></div></div>
+    <div class="bb"><div class="bf" id="bf6" style="height:0%"></div></div>
+    <div class="bb"><div class="bf" id="bf7" style="height:0%"></div></div>
+  </div>
+</div>
+<script>
+const COLORS=[[255,0,255],[0,255,255],[255,50,0],[0,255,100],[255,255,0],[180,0,255],[0,200,255],[255,0,100]];
+const NUM_BANDS=8;
+
+// Noise gate: RMS below this = silence. Raise if mic picks up too much room noise.
+const NOISE_GATE_RMS = 0.08;
+// Only normalize if peak exceeds this — prevents amplifying near-silence
+const MIN_PEAK = 0.08;
+
+let analyser, dataArray, audioCtx;
+let smoothed = new Float32Array(NUM_BANDS);
+let rawBands  = new Float32Array(NUM_BANDS);
+let camAngle  = 0, frameCount = 0, running = false;
+
+const canvas   = document.getElementById('c');
+const ctx      = canvas.getContext('2d');
+const btn      = document.getElementById('startBtn');
+const statusEl = document.getElementById('status');
+const bandEls  = Array.from({length:8}, (_,i) => document.getElementById('bf'+i));
+const FREQ_EDGES = Array.from({length:NUM_BANDS+1}, (_,i) => 40*Math.pow(22050/40, i/NUM_BANDS));
+
+function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+window.addEventListener('resize', resize); resize();
+
+function getBands(){
+  if(!analyser) return;
+  analyser.getByteFrequencyData(dataArray);
+  const nyq = audioCtx.sampleRate/2;
+  const bc  = dataArray.length;
+
+  // Compute overall RMS to check if there's real signal
+  let sumSq = 0;
+  for(let i=0; i<bc; i++) sumSq += (dataArray[i]/255) * (dataArray[i]/255);
+  const rms = Math.sqrt(sumSq/bc);
+
+  // Below noise gate → hard zero, no geometry movement
+  if(rms < NOISE_GATE_RMS){
+    rawBands.fill(0);
+    return;
+  }
+
+  // Extract per-band energy
+  const raw = new Float32Array(NUM_BANDS);
+  let peak = 0;
+  for(let i=0; i<NUM_BANDS; i++){
+    const lo = Math.floor(FREQ_EDGES[i]/nyq*bc);
+    const hi = Math.ceil(FREQ_EDGES[i+1]/nyq*bc);
+    let sum=0, cnt=0;
+    for(let b=lo; b<hi&&b<bc; b++){ sum+=dataArray[b]*dataArray[b]; cnt++; }
+    raw[i] = cnt>0 ? Math.sqrt(sum/cnt)/255 : 0;
+    if(raw[i]>peak) peak=raw[i];
+  }
+
+  // Only normalize if there's a real peak — otherwise keep absolute values
+  // This prevents quiet hiss from being stretched to full scale
+  if(peak > MIN_PEAK){
+    for(let i=0; i<NUM_BANDS; i++) rawBands[i] = Math.min(raw[i]/peak, 1);
+  } else {
+    // Scale linearly without normalizing — stays small when signal is small
+    for(let i=0; i<NUM_BANDS; i++) rawBands[i] = Math.min(raw[i]/MIN_PEAK, 1);
+  }
+}
+
+function project3D(wx,wy,wz){
+  const W=canvas.width, H=canvas.height;
+  const cx=Math.cos(camAngle)*700, cy=-200, cz=Math.sin(camAngle)*700;
+  const fx=-cx,fy=-cy,fz=-cz, fl=Math.sqrt(fx*fx+fy*fy+fz*fz);
+  const fxn=fx/fl,fyn=fy/fl,fzn=fz/fl;
+  const rx=fzn,ry=0,rz=-fxn, rl=Math.sqrt(rx*rx+rz*rz);
+  const rxn=rx/rl,rzn=rz/rl;
+  const uxn=0*fzn-rzn*fyn, uyn=rzn*fxn-rxn*fzn, uzn=rxn*fyn-0*fxn;
+  const dx=wx-cx,dy=wy-cy,dz=wz-cz;
+  const camX=dx*rxn+dy*0+dz*rzn;
+  const camY=dx*uxn+dy*uyn+dz*uzn;
+  const camZ=dx*fxn+dy*fyn+dz*fzn;
+  if(camZ<=0) return null;
+  const scale=600/camZ;
+  return [W/2+camX*scale, H/2-camY*scale];
+}
+
+function drawFrame(ba, t){
+  const W=canvas.width, H=canvas.height;
+  ctx.fillStyle='rgb(6,4,14)'; ctx.fillRect(0,0,W,H);
+
+  // Layer 1: arches
+  ctx.lineWidth=2.5;
+  for(let i=0;i<8;i++){
+    const e=ba[i]; const[r,g,b]=COLORS[i];
+    ctx.strokeStyle=`rgba(${r},${g},${b},0.9)`;
+    ctx.beginPath(); let first=true;
+    for(let j=0;j<=100;j++){
+      const s=j/100, x=(s-0.5)*720;
+      const arch=Math.sin(s*Math.PI), wob=Math.sin(s*Math.PI*(i+2)+t)*0.3;
+      const y=(i-3.5)*65-e*190*(arch+wob);
+      const z=Math.sin(s*Math.PI*2+i+t*0.5)*(35+e*90);
+      const p=project3D(x,y,z); if(!p) continue;
+      if(first){ctx.moveTo(p[0],p[1]);first=false;}else ctx.lineTo(p[0],p[1]);
+    }
+    ctx.stroke();
+  }
+
+  // Layer 2: filaments
+  ctx.lineWidth=0.8;
+  for(let xi=0;xi<18;xi++){
+    const s=xi/17, x=(s-0.5)*720;
+    for(let i=0;i<7;i++){
+      const e0=ba[i],e1=ba[i+1],avg=(e0+e1)*0.5;
+      const[r,g,b]=COLORS[i];
+      const y0=(i-3.5)*65-e0*190*(Math.sin(s*Math.PI)+Math.sin(s*Math.PI*(i+2)+t)*0.3);
+      const z0=Math.sin(s*Math.PI*2+i+t*0.5)*(35+e0*90);
+      const y1=((i+1)-3.5)*65-e1*190*(Math.sin(s*Math.PI)+Math.sin(s*Math.PI*(i+3)+t)*0.3);
+      const z1=Math.sin(s*Math.PI*2+(i+1)+t*0.5)*(35+e1*90);
+      const p0=project3D(x,y0,z0), p1=project3D(x,y1,z1);
+      if(!p0||!p1) continue;
+      ctx.strokeStyle=`rgba(${r},${g},${b},${avg*0.6})`;
+      ctx.beginPath();ctx.moveTo(p0[0],p0[1]);ctx.lineTo(p1[0],p1[1]);ctx.stroke();
+    }
+  }
+
+  // Layer 3: rings
+  ctx.lineWidth=1.5;
+  for(let i=0;i<8;i++){
+    const e=ba[i]; const[r,g,b]=COLORS[i];
+    ctx.strokeStyle=`rgba(${r},${g},${b},${(80+e*175)/255})`;
+    const radius=120+i*28+e*100, tilt=(i/8)*Math.PI, phase=t*(0.4+i*0.07);
+    ctx.beginPath(); let first=true;
+    for(let j=0;j<=90;j++){
+      const angle=j/90*Math.PI*2+phase;
+      const p=project3D(radius*Math.cos(angle),radius*Math.sin(angle)*Math.cos(tilt),radius*Math.sin(angle)*Math.sin(tilt));
+      if(!p) continue;
+      if(first){ctx.moveTo(p[0],p[1]);first=false;}else ctx.lineTo(p[0],p[1]);
+    }
+    ctx.stroke();
+  }
+
+  // Layer 4: spokes
+  ctx.lineWidth=2;
+  for(let s=0;s<24;s++){
+    const angle=s/24*Math.PI*2+t*0.2, bid=s%4, e=ba[bid];
+    const[r,g,b]=COLORS[bid];
+    ctx.strokeStyle=`rgba(${r},${g},${b},${(60+e*180)/255})`;
+    const p1=project3D(Math.cos(angle)*10,Math.sin(angle)*10,Math.sin(angle+bid)*20);
+    const p2=project3D(Math.cos(angle)*(40+e*220),Math.sin(angle)*(40+e*220),Math.sin(angle+bid)*(20+e*60));
+    if(!p1||!p2) continue;
+    ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+  }
+
+  // Layer 5: particles
+  for(let p=0;p<60;p++){
+    const bid=5+(p%3),e=ba[bid]; const[r,g,b]=COLORS[bid];
+    const angle=p/60*Math.PI*2, dist=e*180, tilt=Math.sin(p*0.4+t)*Math.PI*0.4;
+    const pt=project3D(Math.cos(angle)*dist*Math.cos(tilt),Math.sin(angle)*dist,Math.cos(angle)*dist*Math.sin(tilt));
+    if(!pt) continue;
+    ctx.fillStyle=`rgba(${r},${g},${b},${e*0.85})`;
+    ctx.beginPath();ctx.arc(pt[0],pt[1],2.5,0,Math.PI*2);ctx.fill();
+  }
+}
+
+function loop(){
+  getBands();
+  for(let i=0;i<NUM_BANDS;i++){
+    // Smoothing: fast attack (0.5), slow decay (0.85) — snappy on hits, graceful fadeout
+    smoothed[i] = rawBands[i] > smoothed[i]
+      ? smoothed[i]*0.5 + rawBands[i]*0.5
+      : smoothed[i]*0.85 + rawBands[i]*0.15;
+    bandEls[i].style.height = Math.round(smoothed[i]*100)+'%';
+  }
+  camAngle += 0.0022 + smoothed[0]*0.013;
+  drawFrame(smoothed, frameCount*0.012);
+  frameCount++;
+  requestAnimationFrame(loop);
+}
+
+function idleLoop(){
+  if(running) return;
+  camAngle = Date.now()*0.001*0.4;
+  drawFrame(new Float32Array(NUM_BANDS), Date.now()*0.001);
+  requestAnimationFrame(idleLoop);
+}
+
+btn.addEventListener('click', async()=>{
+  if(running) return;
+  try{
+    audioCtx = new(window.AudioContext||window.webkitAudioContext)();
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true, video:false});
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.5; // browser-level smoothing
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    audioCtx.createMediaStreamSource(stream).connect(analyser);
+    running = true;
+    btn.textContent = '🎤 Listening';
+    btn.disabled = true;
+    statusEl.textContent = 'Make some noise!';
+    camAngle = 0; frameCount = 0;
+    loop();
+  }catch(e){
+    statusEl.textContent = 'Mic access denied';
+  }
+});
+
+idleLoop();
+</script>
+</body>
+</html>

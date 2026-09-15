@@ -21,3 +21,47 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude working folder
+_incoming
+
+# build output (docs/ is the published one)
+dist
+
+# Source media the site no longer uses (GIFs replaced by MP4s, originals of
+# re-encoded video, superseded PDFs). The files stay on your disk — they are
+# just not pushed, so the repo doesn't carry ~300 MB of dead weight.
+# Delete these lines if you want them versioned after all.
+src/assets/Fold.gif
+src/assets/Front.jpg
+src/assets/GPT1.png
+src/assets/SOUND2FRONT.gif
+src/assets/SOUND2FRONT.jpg
+src/assets/SoundFront.gif
+src/assets/SoundFront.mp4
+src/assets/Straightening.mp4
+src/assets/Straighteningfront.jpg
+src/assets/TD.mp4
+src/assets/Tel.mp4
+src/assets/VerdisQuo2.mp4
+src/assets/Z1.jpg
+src/assets/Z2.jpg
+src/assets/Z3.jpg
+src/assets/Zephyrfront.gif
+src/assets/Zephyrfront2.gif
+src/assets/Zephyrfront2.jpg
+src/assets/bigsection.jpg
+src/assets/bigsection2.jpg
+src/assets/growing.mp4
+src/assets/growingfront.jpg
+src/assets/opt/Final.mp4
+src/assets/opt/Fold.mp4
+src/assets/opt/Report.pdf
+src/assets/opt/SOUND2FRONT.mp4
+src/assets/opt/Straighteningfront.mp4
+src/assets/opt/Zephyrfront2.mp4
+src/assets/opt/fork.mp4
+src/assets/opt/growingfront.mp4
+src/assets/opt/v5.webp
+src/assets/pyth2.mp4
+src/assets/zr.jpg

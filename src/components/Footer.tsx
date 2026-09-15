@@ -1,5 +1,4 @@
-import compPortfolio from "@/assets/ComputationalDesignPortfolio.pdf";
-import archPortfolio from "@/assets/ArchitecturalDesignPortfolio.pdf";
+import portfolio from "@/assets/PortfolioSimonHildell.pdf";
 
 const Footer = () => {
   return (
@@ -27,10 +26,9 @@ const Footer = () => {
               </div>
             </div>
             <div>
-              <p className="text-caption mb-4">Portfolios</p>
+              <p className="text-caption mb-4">Portfolio</p>
               <div className="flex flex-col gap-2">
-                <a href={compPortfolio} target="_blank" rel="noopener noreferrer" className="text-body hover:opacity-60 transition-opacity">Computational design portfolio</a>
-                <a href={archPortfolio} target="_blank" rel="noopener noreferrer" className="text-body hover:opacity-60 transition-opacity">Architectural design portfolio</a>
+                <a href={portfolio} target="_blank" rel="noopener noreferrer" className="text-body hover:opacity-60 transition-opacity">Selected works 2026</a>
               </div>
             </div>
             <div>

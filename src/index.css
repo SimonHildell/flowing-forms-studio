@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -125,8 +123,13 @@
   animation: scroll-left 30s linear infinite;
 }
 
-.animate-scroll-left:hover {
-  animation-play-state: paused;
+/* Pause on hover ONLY where there is a real pointer. On touch devices :hover
+   sticks after the first tap, which froze the panorama in in-app browsers
+   (LinkedIn, Instagram) and never released it. */
+@media (hover: hover) and (pointer: fine) {
+  .animate-scroll-left:hover {
+    animation-play-state: paused;
+  }
 }
 
 /* Project card hover */
@@ -172,4 +175,158 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-muted-foreground/50;
+}
+
+/* ===========================================================================
+   Reveal animations — failsafe version.
+
+   The old markup relied on `opacity-0` + an animation to bring content back.
+   If the animation never ran (in-app webviews, reduced motion, a backgrounded
+   tab restored from bfcache) the content stayed invisible forever. These
+   classes are visible by default and use the animation only as decoration.
+   =========================================================================== */
+@keyframes ffs-fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes ffs-fade-in-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.reveal {
+  opacity: 1;
+  animation: ffs-fade-in 0.8s ease-out both;
+}
+
+.reveal-up {
+  opacity: 1;
+  animation: ffs-fade-in-up 1s ease-out both;
+}
+
+/* Watchdog: if animations are frozen rather than absent, force the end state. */
+html.ffs-anim-fallback .reveal,
+html.ffs-anim-fallback .reveal-up {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-up {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ===========================================================================
+   Isometric city banner
+   =========================================================================== */
+
+/* The drawing is supplied as artwork on white; the site shows it inverted. */
+.ffs-city-img {
+  filter: invert(1);
+  -webkit-user-drag: none;
+}
+
+.ffs-city-svg svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ffs-city-svg g[id] {
+  pointer-events: auto;
+  cursor: pointer;
+  outline: none;
+}
+
+.ffs-city-svg g[id] > * {
+  pointer-events: all;
+  fill: #ffffff;
+  fill-opacity: 0;
+  stroke: #ffffff;
+  stroke-opacity: 0;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  transition: fill-opacity 0.35s ease, stroke-opacity 0.35s ease;
+}
+
+/* the slight white tint + outline on hover / tap / keyboard focus */
+.ffs-city-svg g[id].is-on > *,
+.ffs-city-svg g[id]:focus-visible > * {
+  fill-opacity: 0.2;
+  stroke-opacity: 0.9;
+}
+
+/* The line that grows out of a building, with its title on top. */
+.ffs-pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.ffs-pin.is-on {
+  opacity: 1;
+}
+
+.ffs-pin__text {
+  display: block;
+  white-space: nowrap;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  padding-bottom: 8px;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.95);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease 0.16s, transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1) 0.16s;
+}
+
+.ffs-pin.is-on .ffs-pin__text {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.ffs-pin__line {
+  display: block;
+  width: 1px;
+  height: 78px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), #ffffff);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.34s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.ffs-pin.is-on .ffs-pin__line {
+  transform: scaleY(1);
+}
+
+@media (max-width: 767px) {
+  .ffs-pin__line { height: 56px; }
+  .ffs-pin__text { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ffs-pin__line,
+  .ffs-pin__text {
+    transition-duration: 0.01ms;
+  }
 }
