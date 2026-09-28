@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { cityBuildings } from "@/data/cityBuildings";
+import { getProjectBySlug } from "@/data/projects";
 import citySvgRaw from "@/assets/city/city-outlines.svg?raw";
 import city1300 from "@/assets/city/city-1300.webp";
 import city2600 from "@/assets/city/city-2600.webp";
@@ -33,9 +34,17 @@ const IsoCity = () => {
 
   const byId = useMemo(() => {
     const map: Record<string, (typeof cityBuildings)[number]> = {};
-    cityBuildings.forEach((b) => (map[b.id] = b));
+    cityBuildings.forEach((b) => {
+      // A building pointing at a project that isn't published yet still
+      // highlights and shows its title, it just doesn't go anywhere.
+      const reachable = b.slug ? Boolean(getProjectBySlug(b.slug)) : true;
+      map[b.id] = reachable ? b : { ...b, slug: undefined };
+    });
     return map;
   }, []);
+
+  const byIdRef = useRef(byId);
+  byIdRef.current = byId;
 
   // The exported SVG carries an XML prolog; strip it so it can be inlined.
   const svgMarkup = useMemo(() => citySvgRaw.replace(/<\?xml[^>]*\?>/, "").trim(), []);
@@ -106,10 +115,13 @@ const IsoCity = () => {
         cx: ((box.x + box.width / 2) / vbW) * 100,
         top: (box.y / vbH) * 100,
       };
+      const entry = byIdRef.current[b.id];
+      const isLink = Boolean(entry?.slug || entry?.href);
       g.setAttribute("tabindex", "0");
-      g.setAttribute("role", b.slug || b.href ? "link" : "img");
+      g.setAttribute("role", isLink ? "link" : "img");
       g.setAttribute("aria-label", b.title);
       g.classList.add("ffs-bldg");
+      g.classList.toggle("is-link", isLink);
     });
     setAnchors(next);
   }, [svgMarkup]);
@@ -253,7 +265,7 @@ const IsoCity = () => {
     >
       <div
         ref={containerRef}
-        className="absolute inset-0 cursor-grab touch-pan-y active:cursor-grabbing"
+        className="absolute inset-0 touch-pan-y"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}

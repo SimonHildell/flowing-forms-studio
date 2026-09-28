@@ -1,8 +1,24 @@
 // ---------------------------------------------------------------------------
-// Single source of truth for every project on the site.
-// Add a project here and it appears in the grid, gets its own URL
-// (#/project/<slug>) and can be linked from the isometric city.
+// Every project on the site lives in the `entries` list below.
+//
+// ORDER
+//   The order of the list is the order on the page. Move a block up or down
+//   to reorder. The first PROJECTS_VISIBLE of them (set in
+//   src/components/ProjectsSection.tsx) show before the "Load more" button.
+//
+// ADDING ONE
+//   Copy the TEMPLATE at the bottom of this file, paste it where you want it
+//   to appear, and drop the images into src/assets/projects/<folder>/.
+//   Nothing else to wire up — see src/data/projectMedia.ts for file naming.
+//
+// DRAFTS
+//   draft: true  keeps a project off the published site, but it still shows
+//   while you run `npm run dev`, with a pink DRAFT tag on the card, so you
+//   can build it up and click through to its page. Delete the line to
+//   publish it.
 // ---------------------------------------------------------------------------
+
+import { readFolder, PLACEHOLDER_IMAGE } from "./projectMedia";
 
 // Stills (optimised webp)
 import zephyrFront from "@/assets/opt/zephyrfront2.webp";
@@ -79,24 +95,32 @@ export type Media =
 
 export type Detail = string | { text: string; link: { label: string; href: string } };
 
-export type Project = {
-  id: number;
+type ProjectInput = {
+  id?: number;
   /** URL segment — #/project/<slug>. Changing this changes the shareable link. */
   slug: string;
   title: string;
   category: string;
   year: string;
-  /** Card fallback + detail page hero. */
-  image: string;
-  /** Optional looping clip shown on the card instead of the still. */
-  thumbnailVideo?: string;
-  thumbnailPoster?: string;
   description: string;
   details: Detail[];
+  /** Pull images and clips from src/assets/projects/<folder>/ automatically. */
+  folder?: string;
+  /** Hide from the published site; still visible in `npm run dev`. */
+  draft?: boolean;
+  /** Only for the older projects that list their files by hand. */
+  image?: string;
+  thumbnailVideo?: string;
+  thumbnailPoster?: string;
+  media?: Media[];
+};
+
+export type Project = Omit<ProjectInput, "image" | "media"> & {
+  image: string;
   media: Media[];
 };
 
-export const projects: Project[] = [
+const entries: ProjectInput[] = [
   {
     id: 5,
     slug: "zephyr",
@@ -241,7 +265,113 @@ export const projects: Project[] = [
       { type: "image", src: as3 },
     ],
   },
+
+  // -------------------------------------------------------------------------
+  // The five below are the buildings already drawn in the isometric city that
+  // don't have a page yet. They're drafts: invisible on the published site,
+  // visible when you run `npm run dev`.
+  //
+  // For each one: drop images into src/assets/projects/<folder>/, fill in the
+  // text, then delete its `draft: true` line to publish it.
+  // -------------------------------------------------------------------------
+  {
+    slug: "campustratten",
+    title: "Campustratten",
+    category: "Competition — 1st prize",
+    year: "2026",
+    folder: "campustratten",
+    draft: true,
+    description:
+      "TODO — write the project description. Winning entry in the URBFORM 1:1 competition; to be built.",
+    details: [
+      "TODO: Location",
+      "TODO: Software",
+    ],
+  },
+  {
+    slug: "sport-center",
+    title: "Sport center",
+    category: "TODO: category",
+    year: "TODO",
+    folder: "sport-center",
+    draft: true,
+    description: "TODO — write the project description.",
+    details: ["TODO: Location", "TODO: Software"],
+  },
+  {
+    slug: "construction-cad",
+    title: "Construction CAD",
+    category: "TODO: category",
+    year: "TODO",
+    folder: "construction-cad",
+    draft: true,
+    description: "TODO — write the project description.",
+    details: ["TODO: Location", "TODO: Software"],
+  },
+  {
+    slug: "notre-dame",
+    title: "Notre-Dame",
+    category: "TODO: category",
+    year: "TODO",
+    folder: "notre-dame",
+    draft: true,
+    description: "TODO — write the project description.",
+    details: ["TODO: Location", "TODO: Software"],
+  },
+  {
+    slug: "rain-catcher",
+    title: "Rain catcher",
+    category: "TODO: category",
+    year: "TODO",
+    folder: "rain-catcher",
+    draft: true,
+    description: "TODO — write the project description.",
+    details: ["TODO: Location", "TODO: Software"],
+  },
 ];
+
+// ---------------------------------------------------------------------------
+// TEMPLATE — copy this block, paste it into the list above where you want the
+// project to appear, then put the images in src/assets/projects/<folder>/.
+//
+//   {
+//     slug: "my-project",            // the URL: #/project/my-project
+//     title: "My project",
+//     category: "Academic Project",
+//     year: "2026",
+//     folder: "my-project",          // src/assets/projects/my-project/
+//     draft: true,                   // delete this line to publish it
+//     description: "A sentence or two about the project.",
+//     details: [
+//       "Location: Somewhere",
+//       "Software: Rhinoceros, Grasshopper",
+//       // a line with a link attached:
+//       // { text: "Together with: ...", link: { label: "Read more", href: "https://..." } },
+//     ],
+//   },
+//
+// To link it from a building in the isometric city, add its slug in
+// src/data/cityBuildings.ts.
+// ---------------------------------------------------------------------------
+
+/** Fill in whatever the project didn't state by hand from its media folder. */
+const resolve = (entry: ProjectInput): Project => {
+  const found = entry.folder ? readFolder(entry.folder) : undefined;
+  return {
+    ...entry,
+    image: entry.image ?? found?.image ?? PLACEHOLDER_IMAGE,
+    thumbnailVideo: entry.thumbnailVideo ?? found?.thumbnailVideo,
+    thumbnailPoster: entry.thumbnailPoster ?? found?.thumbnailPoster,
+    media: entry.media ?? found?.media ?? [],
+  };
+};
+
+/** Drafts are visible while developing, never on the published site. */
+export const SHOWING_DRAFTS = import.meta.env.DEV;
+
+export const projects: Project[] = entries
+  .filter((entry) => SHOWING_DRAFTS || !entry.draft)
+  .map(resolve);
 
 export const getProjectBySlug = (slug?: string) =>
   projects.find((p) => p.slug === slug);

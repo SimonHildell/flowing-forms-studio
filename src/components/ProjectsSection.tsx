@@ -1,7 +1,19 @@
+import { useState } from "react";
 import ProjectCard from "./ProjectCard";
 import { projects } from "@/data/projects";
 
+/**
+ * How many projects show before the "Load more" button.
+ * Change this one number — 4, 6, 8 — and everything else follows.
+ */
+const PROJECTS_VISIBLE = 6;
+
 const ProjectsSection = () => {
+  const [showAll, setShowAll] = useState(false);
+
+  const shown = showAll ? projects : projects.slice(0, PROJECTS_VISIBLE);
+  const remaining = projects.length - shown.length;
+
   return (
     <section id="work" className="py-20 md:py-32">
       <div className="container">
@@ -11,9 +23,9 @@ const ProjectsSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {projects.map((project, index) => (
+          {shown.map((project, index) => (
             <ProjectCard
-              key={project.id}
+              key={project.slug}
               slug={project.slug}
               title={project.title}
               category={project.category}
@@ -21,10 +33,28 @@ const ProjectsSection = () => {
               image={project.image}
               video={project.thumbnailVideo}
               poster={project.thumbnailPoster}
-              index={index}
+              draft={project.draft}
+              // Cards revealed by the button shouldn't queue up behind a long
+              // stagger, so the delay restarts with each row of the batch.
+              index={index % PROJECTS_VISIBLE}
             />
           ))}
         </div>
+
+        {remaining > 0 && (
+          <div className="mt-12 md:mt-16 flex justify-center">
+            <button
+              type="button"
+              className="ffs-more"
+              onClick={() => setShowAll(true)}
+              aria-label={`Show ${remaining} more project${remaining === 1 ? "" : "s"}`}
+            >
+              <span>Load more</span>
+              <span className="ffs-more__count">{remaining}</span>
+              <span className="ffs-more__arrow" aria-hidden="true" />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

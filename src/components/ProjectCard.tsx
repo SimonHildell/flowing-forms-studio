@@ -9,6 +9,8 @@ interface ProjectCardProps {
   image: string;
   video?: string;
   poster?: string;
+  /** Unpublished — shows a tag while developing, never reaches the live site. */
+  draft?: boolean;
   index: number;
 }
 
@@ -20,6 +22,7 @@ const ProjectCard = ({
   image,
   video,
   poster,
+  draft,
   index,
 }: ProjectCardProps) => {
   return (
@@ -34,6 +37,7 @@ const ProjectCard = ({
         style={{ animationDelay: `${0.2 + index * 0.15}s` }}
       >
         <div className="relative aspect-[4/5] md:aspect-[3/4] overflow-hidden">
+          {draft && <span className="ffs-draft-badge">Draft</span>}
           {video ? (
             <LoopVideo
               src={video}

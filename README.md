@@ -28,34 +28,78 @@ domain — no rebuild needed if you add a CNAME later.
 
 ## Adding a project
 
-Everything lives in **`src/data/projects.ts`**. Add an object to the `projects`
-array:
+Everything lives in **`src/data/projects.ts`**, in the `entries` list. The order
+of that list is the order on the page — move a block to reorder it.
+
+Copy the TEMPLATE at the bottom of that file, paste it where you want the
+project to appear, and fill it in:
 
 ```ts
 {
-  id: 7,
   slug: "my-project",          // the URL: #/project/my-project
   title: "My project",
   category: "Academic Project",
   year: "2026",
-  image: someStill,            // card fallback + detail page hero
-  thumbnailVideo: someLoop,    // optional looping clip on the card
-  thumbnailPoster: somePoster,
-  description: "...",
-  details: [
-    "Location: Somewhere",
-    { text: "Together with: ...", link: { label: "Read report", href: reportPdf } },
-  ],
-  media: [
-    { type: "image", src: img1 },
-    { type: "loop",  src: clip, poster: clipPoster },  // GIF-style: silent, looping, no controls
-    { type: "video", src: film },                      // real video: sound + controls
-  ],
+  folder: "my-project",        // src/assets/projects/my-project/
+  draft: true,                 // delete this line to publish it
+  description: "A sentence or two about the project.",
+  details: ["Location: Somewhere", "Software: Rhinoceros, Grasshopper"],
 }
 ```
 
-Import the files at the top of that same file. Order in the array is the order
-on the page.
+Then make `src/assets/projects/my-project/` and drop the files in. **No imports
+to write** — they're picked up automatically, in filename order:
+
+| file | what it becomes |
+|---|---|
+| `cover.jpg` | the card image, and the big image atop the project page |
+| `cover.mp4` | optional looping clip on the card |
+| `01-name.jpg` | page images, in filename order — so number them |
+| `02-name.loop.mp4` | silent looping clip (what a GIF used to be) |
+| `03-name.mp4` | video with sound and play controls |
+
+A clip can have its own still frame: give it the same name with an image
+extension (`02-name.loop.mp4` + `02-name.loop.jpg`).
+
+### Drafts
+
+`draft: true` keeps a project off the published site while still showing it when
+you run `npm run dev` — with a pink DRAFT tag on the card — so you can build it
+up and click through to its page. Delete the line to publish.
+
+A city building pointing at a draft stays un-clickable on the live site until
+you publish the project, so nothing ever links into a void.
+
+### How many show before "Load more"
+
+One number, at the top of **`src/components/ProjectsSection.tsx`**:
+
+```ts
+const PROJECTS_VISIBLE = 6;
+```
+
+Set it to 4, 8, whatever. The button appears only when there are more than that,
+and it says how many are left.
+
+### The older six projects
+
+Naturum, Zephyr and the rest still list their files by hand with `import`
+statements — that's fine, it works, leave it. Only new projects need the
+`folder` approach.
+
+## The About portrait
+
+Replace `src/assets/portrait.jpg` with your own photo, keeping that filename.
+The crop is the `aspect-[4/5]` class in `src/components/AboutSection.tsx` —
+change it to `aspect-square` if you'd rather not crop.
+
+## The cursor
+
+The magenta triangle is defined near the bottom of `src/index.css`, under
+"Custom cursor". Two SVGs: the arrow, and the inverted one for anything
+clickable. To recolour, change the `%23RRGGBB` values inside them (`%23` is an
+escaped `#`). To resize, change `width`, `height` and `viewBox` together. Touch
+devices never see it.
 
 ## Adding a building to the isometric city
 

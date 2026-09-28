@@ -65,3 +65,8 @@ src/assets/opt/growingfront.mp4
 src/assets/opt/v5.webp
 src/assets/pyth2.mp4
 src/assets/zr.jpg
+
+# Windows / Parallels junk
+Thumbs.db
+**/Thumbs.db
+.DS_Store

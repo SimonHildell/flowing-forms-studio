@@ -245,8 +245,12 @@ html.ffs-anim-fallback .reveal-up {
 
 .ffs-city-svg g[id] {
   pointer-events: auto;
-  cursor: pointer;
   outline: none;
+}
+
+/* Only buildings that lead somewhere get the clickable cursor. */
+.ffs-city-svg g[id].is-link {
+  cursor: pointer;
 }
 
 .ffs-city-svg g[id] > * {
@@ -329,4 +333,108 @@ html.ffs-anim-fallback .reveal-up {
   .ffs-pin__text {
     transition-duration: 0.01ms;
   }
+}
+
+/* ===========================================================================
+   Custom cursor — magenta triangle with a heavy black outline.
+
+   To change it, edit the two variables below. --ffs-cursor-fill is the colour
+   inside the triangle; the hover cursor swaps fill and outline so links feel
+   different under the pointer. Touch devices never see any of this.
+   =========================================================================== */
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    /* To recolour: change the two %23RRGGBB values inside each URL below.
+       %23 is just an escaped "#", so %23FF1FA0 means #FF1FA0.
+       Arrow = magenta fill, black outline. Hand = the two swapped over.
+       To resize, change width/height/viewBox together. */
+    --ffs-cursor-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolygon points='3,2 3,24 19,16' fill='%23FF1FA0' stroke='%23000000' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E");
+    --ffs-cursor-hand: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpolygon points='3,2 3,27 21,18' fill='%23000000' stroke='%23FF1FA0' stroke-width='3.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  html,
+  body {
+    cursor: var(--ffs-cursor-arrow) 3 2, auto;
+  }
+
+  /* Anything clickable gets the inverted triangle. */
+  a,
+  button,
+  summary,
+  label[for],
+  [role="button"],
+  [role="link"],
+  .project-card,
+  .ffs-city-svg g[id].is-link,
+  .ffs-pin.is-on .ffs-pin__text {
+    cursor: var(--ffs-cursor-hand) 3 2, pointer;
+  }
+
+  /* Text you can select keeps a normal I-beam. */
+  input,
+  textarea,
+  [contenteditable="true"] {
+    cursor: text;
+  }
+
+  /* Video controls are the browser's own UI — leave them alone. */
+  video[controls] {
+    cursor: auto;
+  }
+}
+
+/* ===========================================================================
+   "Load more" button under the projects grid
+   =========================================================================== */
+.ffs-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.95rem 2.25rem;
+  border: 1px solid hsl(var(--foreground));
+  background: transparent;
+  color: hsl(var(--foreground));
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+.ffs-more:hover {
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+}
+
+.ffs-more__count {
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+
+.ffs-more__arrow {
+  display: block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.35s ease;
+}
+
+.ffs-more:hover .ffs-more__arrow {
+  transform: translateY(1px) rotate(45deg);
+}
+
+/* Marks an unpublished project while running `npm run dev`. Never shipped. */
+.ffs-draft-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  padding: 0.3rem 0.6rem;
+  background: #ff1fa0;
+  color: #000;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
