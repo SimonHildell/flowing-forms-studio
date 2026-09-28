@@ -425,6 +425,14 @@ html.ffs-anim-fallback .reveal-up {
   transform: translateY(1px) rotate(45deg);
 }
 
+.ffs-more__arrow.is-up {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.ffs-more:hover .ffs-more__arrow.is-up {
+  transform: translateY(-1px) rotate(225deg);
+}
+
 /* Marks an unpublished project while running `npm run dev`. Never shipped. */
 .ffs-draft-badge {
   position: absolute;

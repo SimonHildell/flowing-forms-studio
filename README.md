@@ -75,11 +75,11 @@ you publish the project, so nothing ever links into a void.
 One number, at the top of **`src/components/ProjectsSection.tsx`**:
 
 ```ts
-const PROJECTS_VISIBLE = 6;
+const PROJECTS_VISIBLE = 4;
 ```
 
-Set it to 4, 8, whatever. The button appears only when there are more than that,
-and it says how many are left.
+Set it to 6, 8, whatever. The Load more button appears only when there are more
+than that, and it says how many are left; once expanded it becomes View less.
 
 ### The older six projects
 

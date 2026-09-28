@@ -56,7 +56,7 @@ const ProjectCard = ({
 
           {/* Project info overlay */}
           <div className="project-info absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-foreground/80 to-transparent">
-            <p className="text-caption text-primary-foreground/70 mb-1">{category} — {year}</p>
+            <p className="text-caption text-primary-foreground/70 mb-1">{category} {year}</p>
             <h3 className="text-headline text-primary-foreground">{title}</h3>
           </div>
         </div>

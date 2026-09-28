@@ -37,7 +37,7 @@ const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
           {/* Left column - Title and meta */}
           <div className="md:col-span-5">
             <p className="text-caption mb-4">
-              {project.category} — {project.year}
+              {project.category} {project.year}
             </p>
             <h1 className="text-display mb-8">{project.title}</h1>
 

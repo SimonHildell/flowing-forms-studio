@@ -122,6 +122,21 @@ export type Project = Omit<ProjectInput, "image" | "media"> & {
 
 const entries: ProjectInput[] = [
   {
+    slug: "campustratten",
+    title: "Campustratten",
+    category: "Competition, 1st prize",
+    year: "2026",
+    folder: "campustratten",
+    description:
+      "Campustratten is meant to work as an evolution of, and a sibling to, the existing LTH fountain, something with a similar spirit but its own identity on campus. The roofs are designed to be visible from a distance, and the way their angles interact creates a slight imperfection, nothing perfectly aligned, which is exactly what makes them feel approachable rather than monumental. Placed the way they are on campus, they naturally become a meeting spot, somewhere to stop, sit in a circle, and actually have a conversation without needing a reason to be there. Rainwater gets gathered visibly by the roof and filtered down through the central column, so on a rainy day you can sit underneath and watch the water work its way through the filter, or just use what has been stored to wash your bike. Each roof reads as a cone, physically and visually pulling water toward its center, tilted slightly as if bowing toward the greenery closest to it. It ends up being three things at once, a landmark you can spot from across campus, a social node, and a working piece of infrastructure you can actually use.",
+    details: [
+      "URBFORM 1:1 Competition winner, to be built",
+      "Location: LTH campus, Lund",
+      "Duo work",
+    ],
+  },
+
+  {
     id: 5,
     slug: "zephyr",
     title: "ZEPHYR",
@@ -147,30 +162,7 @@ const entries: ProjectInput[] = [
       { type: "image", src: zRender },
     ],
   },
-  {
-    id: 6,
-    slug: "audio-interactive",
-    title: "Audio interactive",
-    category: "Academic + hobby project",
-    year: "2026",
-    image: audioFront,
-    thumbnailVideo: audioLoop,
-    thumbnailPoster: audioLoopPoster,
-    description:
-      "This is geometry that uses sound as its input to generate visuals. I have made it both as a hobby project but also as part of the course 'programming for architects'.",
-    details: [
-      {
-        text: "Workflows: Python, Touchdesigner",
-        link: { label: "Try it here", href: "./audio-visualizer.html" },
-      },
-    ],
-    media: [
-      { type: "video", src: verdisQuo },
-      { type: "video", src: tel },
-      { type: "video", src: touchdesigner },
-      { type: "video", src: python },
-    ],
-  },
+
   {
     id: 1,
     slug: "naturum",
@@ -200,6 +192,32 @@ const entries: ProjectInput[] = [
       { type: "loop", src: forkLoop, poster: forkPoster },
     ],
   },
+
+  {
+    id: 6,
+    slug: "audio-interactive",
+    title: "Audio interactive",
+    category: "Academic + hobby project",
+    year: "2026",
+    image: audioFront,
+    thumbnailVideo: audioLoop,
+    thumbnailPoster: audioLoopPoster,
+    description:
+      "This is geometry that uses sound as its input to generate visuals. I have made it both as a hobby project but also as part of the course 'programming for architects'.",
+    details: [
+      {
+        text: "Workflows: Python, Touchdesigner",
+        link: { label: "Try it here", href: "./audio-visualizer.html" },
+      },
+    ],
+    media: [
+      { type: "video", src: verdisQuo },
+      { type: "video", src: tel },
+      { type: "video", src: touchdesigner },
+      { type: "video", src: python },
+    ],
+  },
+
   {
     id: 2,
     slug: "nakagin-capsule",
@@ -222,6 +240,7 @@ const entries: ProjectInput[] = [
       { type: "image", src: dia3 },
     ],
   },
+
   {
     id: 3,
     slug: "rain-hub",
@@ -245,6 +264,7 @@ const entries: ProjectInput[] = [
       { type: "image", src: vec },
     ],
   },
+
   {
     id: 4,
     slug: "artist-studios",
@@ -264,69 +284,6 @@ const entries: ProjectInput[] = [
       { type: "image", src: as2 },
       { type: "image", src: as3 },
     ],
-  },
-
-  // -------------------------------------------------------------------------
-  // The five below are the buildings already drawn in the isometric city that
-  // don't have a page yet. They're drafts: invisible on the published site,
-  // visible when you run `npm run dev`.
-  //
-  // For each one: drop images into src/assets/projects/<folder>/, fill in the
-  // text, then delete its `draft: true` line to publish it.
-  // -------------------------------------------------------------------------
-  {
-    slug: "campustratten",
-    title: "Campustratten",
-    category: "Competition — 1st prize",
-    year: "2026",
-    folder: "campustratten",
-    draft: true,
-    description:
-      "TODO — write the project description. Winning entry in the URBFORM 1:1 competition; to be built.",
-    details: [
-      "TODO: Location",
-      "TODO: Software",
-    ],
-  },
-  {
-    slug: "sport-center",
-    title: "Sport center",
-    category: "TODO: category",
-    year: "TODO",
-    folder: "sport-center",
-    draft: true,
-    description: "TODO — write the project description.",
-    details: ["TODO: Location", "TODO: Software"],
-  },
-  {
-    slug: "construction-cad",
-    title: "Construction CAD",
-    category: "TODO: category",
-    year: "TODO",
-    folder: "construction-cad",
-    draft: true,
-    description: "TODO — write the project description.",
-    details: ["TODO: Location", "TODO: Software"],
-  },
-  {
-    slug: "notre-dame",
-    title: "Notre-Dame",
-    category: "TODO: category",
-    year: "TODO",
-    folder: "notre-dame",
-    draft: true,
-    description: "TODO — write the project description.",
-    details: ["TODO: Location", "TODO: Software"],
-  },
-  {
-    slug: "rain-catcher",
-    title: "Rain catcher",
-    category: "TODO: category",
-    year: "TODO",
-    folder: "rain-catcher",
-    draft: true,
-    description: "TODO — write the project description.",
-    details: ["TODO: Location", "TODO: Software"],
   },
 ];
 

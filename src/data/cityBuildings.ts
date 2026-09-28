@@ -29,11 +29,12 @@ export const cityBuildings: CityBuilding[] = [
   { id: "nagakin", title: "Nakagin capsule", slug: "nakagin-capsule" },
   { id: "artiststudios", title: "Artist studios", slug: "artist-studios" },
 
-  // --- these point at draft projects in projects.ts. They only become
-  //     clickable on the published site once you remove `draft: true` there.
   { id: "tratten", title: "Campustratten", slug: "campustratten" },
-  { id: "sportcenter", title: "Sport center", slug: "sport-center" },
-  { id: "byggcad", title: "Construction CAD", slug: "construction-cad" },
-  { id: "notredam", title: "Notre-Dame", slug: "notre-dame" },
-  { id: "raincatcher", title: "Rain catcher", slug: "rain-catcher" },
+
+  // --- drawn in the city, no project page yet. They still highlight and show
+  //     their title; add a `slug` once the project exists in projects.ts.
+  { id: "sportcenter", title: "Sport center" },
+  { id: "byggcad", title: "Construction CAD" },
+  { id: "notredam", title: "Notre-Dame" },
+  { id: "raincatcher", title: "Rain catcher" },
 ];
