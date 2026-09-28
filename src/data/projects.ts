@@ -132,7 +132,7 @@ const entries: ProjectInput[] = [
     details: [
       "URBFORM 1:1 Competition winner, to be built",
       "Location: LTH campus, Lund",
-      "Duo work",
+      "Duo work with Alexander Söderholm",
     ],
   },
 
