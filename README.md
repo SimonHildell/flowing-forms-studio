@@ -54,6 +54,7 @@ to write** — they're picked up automatically, in filename order:
 |---|---|
 | `cover.jpg` | the card image, and the big image atop the project page |
 | `cover.mp4` | optional looping clip on the card |
+| `hero.jpg` | optional. The big image at the top of the project page, when the card image doesn't crop well to a wide band |
 | `01-name.jpg` | page images, in filename order — so number them |
 | `02-name.loop.mp4` | silent looping clip (what a GIF used to be) |
 | `03-name.mp4` | video with sound and play controls |

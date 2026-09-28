@@ -8,10 +8,13 @@ import type { Media } from "./projects";
  * to touch. Drop files in, refresh, done.
  *
  * FILE NAMING
- *   cover.jpg / .png / .webp   the card image and the big image at the top
- *                              of the project page
+ *   cover.jpg / .png / .webp   the card image, and the big image at the top of
+ *                              the project page unless there's a hero below
  *   cover.mp4                  optional looping clip on the card (cover.jpg
  *                              is used as its still frame while it loads)
+ *   hero.jpg / .png / .webp    optional. The big image at the top of the
+ *                              project page, when the card image doesn't crop
+ *                              well to a wide band
  *   01-whatever.jpg            the images down the project page, shown in
  *   02-whatever.png            filename order — so number them
  *   03-whatever.loop.mp4       a silent looping clip (what a GIF used to be)
@@ -68,10 +71,12 @@ export const readFolder = (folder: string): FolderMedia => {
 
   const cover = entries.find((e) => stem(e.name) === "cover" && IMAGE_EXT.test(e.name));
   const coverClip = entries.find((e) => e.name.toLowerCase() === "cover.mp4");
+  const hero = entries.find((e) => stem(e.name) === "hero" && IMAGE_EXT.test(e.name));
 
   const media: Media[] = [];
   for (const entry of entries) {
     if (stem(entry.name) === "cover" || entry.name.toLowerCase() === "cover.mp4") continue;
+    if (stem(entry.name) === "hero") continue;
     if (IMAGE_EXT.test(entry.name)) {
       // Skip images that exist only to be a clip's still frame.
       const isPoster = entries.some(
@@ -86,7 +91,7 @@ export const readFolder = (folder: string): FolderMedia => {
   }
 
   return {
-    image: cover?.url,
+    image: hero?.url ?? cover?.url,
     thumbnailVideo: coverClip?.url,
     thumbnailPoster: cover?.url,
     media,
