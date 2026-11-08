@@ -30,11 +30,12 @@ export const cityBuildings: CityBuilding[] = [
   { id: "artiststudios", title: "Artist studios", slug: "artist-studios" },
 
   { id: "tratten", title: "Campustratten", slug: "campustratten" },
+  { id: "notredam", title: "Notre-Dame", slug: "prompt-modelling" },
+  { id: "raincatcher", title: "Rain catcher", slug: "prompt-modelling" },
 
   // --- drawn in the city, no project page yet. They still highlight and show
   //     their title; add a `slug` once the project exists in projects.ts.
   { id: "sportcenter", title: "Sport center" },
   { id: "byggcad", title: "Construction CAD" },
-  { id: "notredam", title: "Notre-Dame" },
-  { id: "raincatcher", title: "Rain catcher" },
+
 ];

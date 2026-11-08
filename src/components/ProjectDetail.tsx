@@ -66,13 +66,18 @@ const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
 
           {/* Right column - Description + media */}
           <div className="md:col-span-7">
-            <p className="text-body text-lg leading-relaxed mb-12">
-              {project.description}
-            </p>
+            <div className="mb-12 space-y-5">
+              {project.description.split(/\n\s*\n/).map((paragraph, i) => (
+                <p key={i} className="text-body text-lg leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
 
             <div className="space-y-8">
               {project.media.map((item, index) => (
-                <div key={index} className="overflow-hidden">
+                <div key={index}>
+                <div className="overflow-hidden">
                   {item.type === "loop" ? (
                     <LoopVideo
                       src={item.src}
@@ -95,7 +100,20 @@ const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
                     />
                   )}
                 </div>
+                {project.post?.[index] && (
+                  <p className="text-body text-lg leading-relaxed mt-8 mb-4">
+                    {project.post[index]}
+                  </p>
+                )}
+                </div>
               ))}
+              {project.post
+                ?.slice(project.media.length)
+                .map((text, i) => (
+                  <p key={`post-${i}`} className="text-body text-lg leading-relaxed">
+                    {text}
+                  </p>
+                ))}
             </div>
           </div>
         </div>

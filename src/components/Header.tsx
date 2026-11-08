@@ -6,6 +6,8 @@ import portfolio from "@/assets/PortfolioSimonHildell.pdf";
 const sections = [
   { id: "work", label: "Work" },
   { id: "about", label: "About" },
+  // Game takes you to the About section, which links on to simonhildell.xyz.
+  { id: "about", label: "Game" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -70,7 +72,7 @@ const Header = () => {
         <nav className="hidden md:flex items-center gap-8">
           {sections.map((s) => (
             <a
-              key={s.id}
+              key={s.label}
               href={`#${s.id}`}
               onClick={goToSection(s.id)}
               className="text-sm hover:opacity-60 transition-opacity"
@@ -109,7 +111,7 @@ const Header = () => {
           <div className="container py-6 flex flex-col gap-4">
             {sections.map((s) => (
               <a
-                key={s.id}
+                key={s.label}
                 href={`#${s.id}`}
                 className="text-lg hover:opacity-60 transition-opacity"
                 onClick={goToSection(s.id)}

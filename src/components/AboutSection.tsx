@@ -31,14 +31,30 @@ const AboutSection = () => {
               I am an architecture student currently pursuing a Master of Science in 
               Digital Architecture and Emergent Futures at Lund University. 
             </p>
-            <p className="text-body text-lg leading-relaxed text-muted-foreground">
-              I have a huge passion for creative problem solving through computational design and 
-              the use of mathematics to inform form, structure, and spatial logic. My work explores 
-              the intersection of technology, materiality and human experience, 
-              aiming to create spaces that are both functional and emotionally engaging. I enjoy 
-              experimenting with parametric tools, digital fabrication, and interactive environments 
-              to push the boundaries of what we can achieve through architecture.
-            </p>
+            <div className="space-y-6 text-body text-lg leading-relaxed text-muted-foreground">
+              <p>
+                I am a curious guy who enjoys movies, boardgames and quiz nights. I have a huge
+                passion for creative problem solving through computational design and the use of
+                mathematics to inform form structure and spatial logic. I like running into problems
+                and understand the underlying logic of systems we use.
+              </p>
+              <p>
+                I stay super up to date with the newest tools available and have in-depth knowledge
+                of most of the main tools used in architecture. On this web I have compiled some of
+                my favorite works, hope you enjoy it and feel free to reach out to talk!
+              </p>
+              <p>
+                If you still haven't gotten enough,{" "}
+                <a
+                  href="https://www.simonhildell.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground underline underline-offset-4 hover:opacity-60 transition-opacity"
+                >
+                  play my game!
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>

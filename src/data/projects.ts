@@ -102,8 +102,15 @@ type ProjectInput = {
   title: string;
   category: string;
   year: string;
+  /** A blank line ("\n\n") starts a new paragraph. */
   description: string;
   details: Detail[];
+  /**
+   * Optional blog-style text woven between the images. Block 1 shows under
+   * the first image/video, block 2 under the second, and so on; any extra
+   * blocks follow at the end. `description` is still the intro at the top.
+   */
+  post?: string[];
   /** Pull images and clips from src/assets/projects/<folder>/ automatically. */
   folder?: string;
   /** Hide from the published site; still visible in `npm run dev`. */
@@ -239,6 +246,25 @@ const entries: ProjectInput[] = [
       { type: "image", src: dia2 },
       { type: "image", src: dia3 },
     ],
+  },
+
+  {
+    slug: "prompt-modelling",
+    title: "Prompt modelling",
+    category: "Hobby project",
+    year: "2026",
+    folder: "prompt-modelling",
+    description:
+      "If you saw the cover, no it's not diffusion, sorry for the confusion, hah!\n\n" +
+      "Alright, openai released GPT 6 Astra which kind of became the kick off for actually usable 3d models. You could already use AI to generate 3d models for a while before, but as meshes with weird topology which were a pain to edit.\n\n" +
+      "Then followed opus and everything else and for a while now you can hook up your rhino with an mcp to write the model you want and out comes clean (sometimes) polysurface geometry. Easy to edit, usable and quick. When I found out you could do it I got really excited and started to prompt model the notre dame, rain catcher, and of course tried to get the millennium Falcon. The Falcon was, unfortunately, protected by Lucasfilm and could not be generated. I'll get there sometime though.\n\n" +
+      "Pretty quickly the question arose; alright what now? What does this actually change? I am not so sure, but I am pretty confident in that design thinking will not be replaced by this workflow. That is just the nature of how it is set up. The bar has been raised in some cases though. It has never been easier to create a neat context model, so; have a super crisp model of the surrounding of your project or be ashamed! If you read all the way here and have any thoughts or ideas, reach out to me and let's talk bout it!\n\n" +
+      "08.11.26",
+    post: [
+      "", // nothing under the city video
+      "context modelling vrooom!",
+    ],
+    details: [],
   },
 
   {
