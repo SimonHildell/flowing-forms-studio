@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import LoopVideo from "./LoopVideo";
 import Player from "./Player";
+import Gallery from "./Gallery";
 import type { Project } from "@/data/projects";
 
 interface ProjectDetailProps {
@@ -84,6 +85,8 @@ const ProjectDetail = ({ project, onClose }: ProjectDetailProps) => {
                       poster={item.poster}
                       className="w-full h-auto object-cover"
                     />
+                  ) : item.type === "gallery" ? (
+                    <Gallery srcs={item.srcs} alt={project.title} />
                   ) : item.type === "video" ? (
                     <Player
                       src={item.src}

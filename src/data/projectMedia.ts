@@ -19,6 +19,9 @@ import type { Media } from "./projects";
  *   02-whatever.png            filename order — so number them
  *   03-whatever.loop.mp4       a silent looping clip (what a GIF used to be)
  *   04-whatever.mp4            a proper video, with sound and play controls
+ *   05-x.slide-1.jpg           a slider: every file named <same start>.slide-N
+ *   05-x.slide-2.jpg           shares one spot on the page, with arrows to
+ *                              click through them in order
  *
  * A clip can have its own still frame by giving it the same name with an
  * image extension: `03-fold.loop.mp4` + `03-fold.loop.jpg`.
@@ -27,6 +30,7 @@ import type { Media } from "./projects";
 const IMAGE_EXT = /\.(jpe?g|png|webp|avif|gif)$/i;
 const VIDEO_EXT = /\.mp4$/i;
 const LOOP_MARK = /\.loop\.mp4$/i;
+const SLIDE_MARK = /^(.*)\.slide-[^/]*$/i;
 
 // Vite reads this at build time; the paths must stay literal.
 const files = import.meta.glob("../assets/projects/*/*.{jpg,jpeg,JPG,JPEG,png,PNG,webp,avif,gif,mp4,MP4}", {
@@ -77,6 +81,18 @@ export const readFolder = (folder: string): FolderMedia => {
   for (const entry of entries) {
     if (stem(entry.name) === "cover" || entry.name.toLowerCase() === "cover.mp4") continue;
     if (stem(entry.name) === "hero") continue;
+    const slide = IMAGE_EXT.test(entry.name) && entry.name.match(SLIDE_MARK);
+    if (slide) {
+      // All slides with the same start go into one gallery, at the first one's spot.
+      const last = media[media.length - 1];
+      const group = slide[1];
+      if (last?.type === "gallery" && (last as { group?: string }).group === group) {
+        last.srcs.push(entry.url);
+      } else {
+        media.push({ type: "gallery", srcs: [entry.url], group } as Media);
+      }
+      continue;
+    }
     if (IMAGE_EXT.test(entry.name)) {
       // Skip images that exist only to be a clip's still frame.
       const isPoster = entries.some(

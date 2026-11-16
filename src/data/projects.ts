@@ -91,7 +91,9 @@ export type Media =
   /** GIF-replacement: autoplays, loops, silent, no controls, no progress bar. */
   | { type: "loop"; src: string; poster?: string }
   /** A real video: has sound and controls. */
-  | { type: "video"; src: string; poster?: string };
+  | { type: "video"; src: string; poster?: string }
+  /** Several images sharing one spot, with arrows to step through them. */
+  | { type: "gallery"; srcs: string[] };
 
 export type Detail = string | { text: string; link: { label: string; href: string } };
 
@@ -263,6 +265,8 @@ const entries: ProjectInput[] = [
     post: [
       "", // nothing under the city video
       "context modelling vrooom!",
+      "", // nothing under the city series video
+      "16.11.26 played around some more.",
     ],
     details: [],
   },
